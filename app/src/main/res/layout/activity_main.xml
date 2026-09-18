@@ -25,7 +25,9 @@
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
         <!-- BottomAppBar -->
         <com.google.android.material.bottomappbar.BottomAppBar
@@ -58,6 +60,7 @@
             android:src="@drawable/icadd"
             app:layout_anchor="@id/bottomAppbar"
             app:maxImageSize="40dp" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- Navigation Drawer -->

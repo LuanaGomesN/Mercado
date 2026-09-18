@@ -1,12 +1,19 @@
-package com.marta.navigationdrawer
+package com.luana.navigationdrawer
 
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.navigation.NavigationView
 import com.luana.navigationdrawer.databinding.ActivityMainBinding
-import ...
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -23,7 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Hide the status bar.
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        windowInsetsController(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
+        WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
 
         setSupportActionBar(binding.toolbar)
 
@@ -35,7 +42,51 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // supportActionBar?.title = ""
         binding.navigationDrawer.setNavigationItemSelectedListener(this)
 
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.bottom_home -> openFragment(HomeFragment())
+                R.id.bottom_cart -> openFragment(CartFragment())
+                R.id.bottom_profile -> openFragment(ProfileFragment())
+                R.id.bottom_menu -> openFragment(MenuFragment())
+            }
+            true
+        }
+
+        fragmentManager = supportFragmentManager
+        openFragment(HomeFragment())
+
+        binding.fab.setOnClickListener {
+            Toast.makeText(this, "Categorias", Toast.LENGTH_SHORT).show()
+        }
+
+        onBackPressedDispatcher.addCallback(this){
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+            }else{
+                finish()
+            }
+        }
 
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.nav_prime -> openFragment(MeliFragment())
+            R.id.nav_fashion -> openFragment(FashionFragment())
+            R.id.nav_eletronics -> openFragment(EletronicsFragment())
+            R.id.nav_beauty -> Toast.makeText(this, "Beleza", Toast.LENGTH_SHORT).show()
+            R.id.nav_food -> Toast.makeText(this, "Alimentos", Toast.LENGTH_SHORT).show()
+            R.id.nav_furniture -> Toast.makeText(this, "Móveis", Toast.LENGTH_SHORT).show()
+        }
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    private fun openFragment(fragment: Fragment){
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+        fragmentTransaction.commit()
+    }
+
 
 }
